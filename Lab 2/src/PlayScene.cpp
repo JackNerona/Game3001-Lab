@@ -62,6 +62,9 @@ void PlayScene::start()
 	//m_pTarget->getRigidBody()->velocity = glm::vec2(1.0f, 0.0f); Makes Target move continuously to the right
 	addChild(m_pTarget);
 
+	m_pStarShip = new StarShip();
+	addChild(m_pStarShip);
+
 	ImGuiWindowFrame::Instance().setGUIFunction(std::bind(&PlayScene::GUI_Function, this));
 }
 
