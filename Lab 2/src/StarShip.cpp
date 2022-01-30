@@ -17,9 +17,9 @@ StarShip::StarShip()
 	getRigidBody()->isColliding = false;
 
 	//Starting motion properties
-	m_maxSpeed = 5.0f; // a maximum number of pixels moved per frame
+	m_maxSpeed = 20.0f; // a maximum number of pixels moved per frame
 	m_turnRate = 5.0f; // a maximum number of degrees to turn each step
-	m_accelerationRate = 2.0f; // a maximum number of pixels to add to the velocity each frame
+	m_accelerationRate = 4.0f; // a maximum number of pixels to add to the velocity each frame
 
 	setType(AGENT);
 }
@@ -88,7 +88,15 @@ void StarShip::setDesiredVelocity(glm::vec2 target_position)
 
 void StarShip::Seek()
 {
+	setDesiredVelocity(getTargetPosition());
 
+	// normalize the target direction (steering)
+	const glm::vec2 steering_direction = getDesiredVelocity() - getCurrentDirection();
+
+	setCurrentDirection(steering_direction); // instantly changing seek
+
+
+	getRigidBody()->acceleration = getCurrentDirection() * getAccelerationRate();
 }
 
 void StarShip::LookWhereYoureGoing()
@@ -98,6 +106,9 @@ void StarShip::LookWhereYoureGoing()
 
 void StarShip::m_move()
 {
+	Seek();
+
+
 	//								New Position   Position term   Velocity term	 Acceleration term
 	//kenematic equation for motion --> Pf =           Pi      +   Vi*(time)     +    (0.5)*Ai*(time * time)
 
@@ -106,18 +117,22 @@ void StarShip::m_move()
 	//Compute the position term
 	const glm::vec2 initial_position = getTransform()->position;
 
-	auto velocity_plus_acceleration = getRigidBody()->velocity + getRigidBody()->acceleration;
-	
 	//compute the velocity term
-	const auto velocity_term = getRigidBody()->velocity * dt;
+	const auto velocity_term = getRigidBody()->velocity;// *dt;
 
 	// Compute acceleration term
-	const auto acceleration_term = getRigidBody()->acceleration * 0.5f * dt;
+	const auto acceleration_term = getRigidBody()->acceleration * 0.5f;// *dt;
+
+
 
 	//compute the new position
-	auto final_position = initial_position + velocity_term + acceleration_term;
+	glm::vec2 final_position = initial_position + velocity_term + acceleration_term;
 
 	getTransform()->position = final_position;
 
+	// add our acceleration to velocity
 	getRigidBody()->velocity += getRigidBody()->acceleration;
+
+	// clamp our velocity at max speed
+	getRigidBody()->velocity = Util::clamp(getRigidBody()->velocity, getMaxSpeed());
 }

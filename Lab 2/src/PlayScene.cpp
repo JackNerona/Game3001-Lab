@@ -64,7 +64,7 @@ void PlayScene::start()
 
 	m_pStarShip = new StarShip();
 	m_pStarShip->setCurrentHeading(0.0);
-	m_pStarShip->getRigidBody()->velocity = m_pStarShip->getCurrentDirection() * m_pStarShip->getMaxSpeed();
+	m_pStarShip->setTargetPosition(m_pTarget->getTransform()->position);
 	m_pStarShip->getRigidBody()->acceleration = m_pStarShip->getCurrentDirection() * m_pStarShip->getAccelerationRate();
 	m_pStarShip->setEnabled(false);
 	addChild(m_pStarShip);
@@ -90,6 +90,7 @@ void PlayScene::GUI_Function() const
 	if(ImGui::SliderFloat2("Target Position", position, 0.0f, 800.0f))
 	{
 		m_pTarget->getTransform()->position = glm::vec2(position[0], position[1]);
+		m_pStarShip->setTargetPosition(m_pTarget->getTransform()->position);
 	}
 	
 	ImGui::Separator();
@@ -99,6 +100,42 @@ void PlayScene::GUI_Function() const
 	if (ImGui::Checkbox("Toggle Seek", &toggleSeek))
 	{
 		m_pStarShip->setEnabled(toggleSeek);
+	}
+
+	static float speed = m_pStarShip->getMaxSpeed();
+	if (ImGui::SliderFloat("Max Speed", &speed, 0.0f, 100.0f))
+	{
+		m_pStarShip->setMaxSpeed(speed);
+	}
+
+	static float acceleration = m_pStarShip->getAccelerationRate();
+	if (ImGui::SliderFloat("Acceleration Rate", &acceleration, 0.0f, 500.0f))
+	{
+		m_pStarShip->setAccelerationRate(acceleration);
+		m_pStarShip->getRigidBody()->acceleration = m_pStarShip->getCurrentDirection() * m_pStarShip->getAccelerationRate();
+	}
+
+	static float turn_rate = m_pStarShip->getTurnRate();
+	if (ImGui::SliderFloat("Turn Rate", &turn_rate, 0.0f, 20.0f))
+	{
+		m_pStarShip->setTurnRate(turn_rate);
+	}
+
+	if (ImGui::Button("Reset"))
+	{
+		// reset ship's postition
+		m_pStarShip->getTransform()->position = glm::vec2(100.0f, 400.0f);
+		
+		// reset target's position
+		m_pTarget->getTransform()->position = glm::vec2(500.0f, 100.0f);
+		
+		// reset current headin (orientation), velocity and acceleration
+		m_pStarShip->setCurrentHeading(0.0);
+		m_pStarShip->getRigidBody()->velocity = glm::vec2(0.0);
+		m_pStarShip->getRigidBody()->acceleration = m_pStarShip->getCurrentDirection() * m_pStarShip->getAccelerationRate();
+
+		m_pStarShip->setTargetPosition(m_pTarget->getTransform()->position);
+
 	}
 
 	ImGui::End();
