@@ -1,9 +1,11 @@
 #include "Agent.h"
 
 #include "Util.h"
+#include <iostream>
 
 Agent::Agent()
 {
+
 }
 
 Agent::~Agent()
@@ -76,4 +78,6 @@ void Agent::m_changeDirection()
 	const auto x = cos(m_currentHeading * Util::Deg2Rad);
 	const auto y = sin(m_currentHeading * Util::Deg2Rad);
 	m_currentDirection = glm::vec2(x, y);
+
+	std::cout << "Current direction is: (" << m_currentDirection.x << ", " << m_currentDirection.y << ")" << std::endl;
 }

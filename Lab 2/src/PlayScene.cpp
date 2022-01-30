@@ -63,6 +63,9 @@ void PlayScene::start()
 	addChild(m_pTarget);
 
 	m_pStarShip = new StarShip();
+	m_pStarShip->setCurrentHeading(0.0);
+	m_pStarShip->getRigidBody()->velocity = m_pStarShip->getCurrentDirection() * m_pStarShip->getMaxSpeed();
+	m_pStarShip->getRigidBody()->acceleration = m_pStarShip->getCurrentDirection() * m_pStarShip->getAccelerationRate();
 	addChild(m_pStarShip);
 
 	ImGuiWindowFrame::Instance().setGUIFunction(std::bind(&PlayScene::GUI_Function, this));
