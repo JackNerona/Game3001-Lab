@@ -66,6 +66,7 @@ void PlayScene::start()
 	m_pStarShip->setCurrentHeading(0.0);
 	m_pStarShip->getRigidBody()->velocity = m_pStarShip->getCurrentDirection() * m_pStarShip->getMaxSpeed();
 	m_pStarShip->getRigidBody()->acceleration = m_pStarShip->getCurrentDirection() * m_pStarShip->getAccelerationRate();
+	m_pStarShip->setEnabled(false);
 	addChild(m_pStarShip);
 
 	ImGuiWindowFrame::Instance().setGUIFunction(std::bind(&PlayScene::GUI_Function, this));
@@ -83,11 +84,22 @@ void PlayScene::GUI_Function() const
 
 	ImGui::Separator();
 
+	// Target properties
+
 	static float position[3] = { m_pTarget->getTransform()->position.x, m_pTarget->getTransform()->position.y};
 	if(ImGui::SliderFloat2("Target Position", position, 0.0f, 800.0f))
 	{
 		m_pTarget->getTransform()->position = glm::vec2(position[0], position[1]);
 	}
 	
+	ImGui::Separator();
+
+	// Starship properties
+	static bool toggleSeek = m_pStarShip->isEnabled();
+	if (ImGui::Checkbox("Toggle Seek", &toggleSeek))
+	{
+		m_pStarShip->setEnabled(toggleSeek);
+	}
+
 	ImGui::End();
 }
