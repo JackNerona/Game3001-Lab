@@ -114,7 +114,6 @@ void StarShip::m_move()
 	// Compute acceleration term
 	const auto acceleration_term = getRigidBody()->acceleration * 0.5f * dt;
 
-	
 	//compute the new position
 	auto final_position = initial_position + velocity_term + acceleration_term;
 
