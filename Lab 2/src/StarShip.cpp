@@ -100,7 +100,7 @@ void StarShip::Seek()
 
 void StarShip::LookWhereYoureGoing(const glm::vec2 target_direction)
 {
-	
+
 	const float target_rotation = Util::signedAngle(getCurrentDirection(), target_direction);
 
 	const float turn_sensitivity = 5.0f;
