@@ -101,21 +101,24 @@ void SpaceShip::Seek()
 
 void SpaceShip::LookWhereYoureGoing(const glm::vec2 target_direction)
 {
-	const float target_rotation = Util::signedAngle(getCurrentDirection(), target_direction) - 90;
+	float target_rotation = Util::signedAngle(getCurrentDirection(), target_direction) - 90;
 
-	const float turn_sensitivity = 5.0f;
+	const float turn_sensitivity = 3.0f;
 
-	if(abs(target_rotation) > turn_sensitivity)
+	if (getCollisionWhiskers()[0]) // if left whisker is colliding
 	{
-		if(target_rotation > 0.0f)
-		{
-			setCurrentHeading(getCurrentHeading() + getTurnRate());
-		}
-		else if(target_rotation < 0.0f)
-		{
-			setCurrentHeading(getCurrentHeading() - getTurnRate());
-		}
-	}	
+		target_rotation += getTurnRate() * turn_sensitivity; // turn right
+	}
+	else if (getCollisionWhiskers()[2]) // if right whisker is colliding
+	{
+		target_rotation -= getTurnRate() * turn_sensitivity; // turn left
+	}
+
+	//smoothing function that changes the heading of the spaceship slowly to align with the target
+	setCurrentHeading(Util::lerpUnclamped(getCurrentHeading(), getCurrentHeading() + target_rotation, getTurnRate() * TheGame::Instance().getDeltaTime()));
+
+	//updates the angle of each of the whiskers for every movement we do
+	updateWhiskers(getWhiskerAngle());
 }
 
 void SpaceShip::m_move()
