@@ -22,15 +22,21 @@ void PlayScene::draw()
 
 	if(m_bDebugView)
 	{
-
+		// Draws the target bounding circle
 		Util::DrawCircle(m_pTarget->getTransform()->position, m_pTarget->getWidth() * 0.5f);
+		// Draw obstacle bounding box
 		Util::DrawRect(m_pObstacle->getTransform()->position - glm::vec2(m_pObstacle->getWidth() * 0.5f, m_pObstacle->getHeight() * 0.5f), m_pObstacle->getWidth(), m_pObstacle->getHeight());
 
 		
 		if (m_pSpaceShip->isEnabled())
 		{
-			//Util::DrawCircle(m_pSpaceShip->getTransform()->position, Util::max(m_pSpaceShip->getWidth() * 0.5f, m_pSpaceShip->getHeight() * 0.5f));
+			// Draws Spaceship bounding box
 			Util::DrawRect(m_pSpaceShip->getTransform()->position - glm::vec2(m_pSpaceShip->getWidth() * 0.5f, m_pSpaceShip->getHeight() * 0.5f), m_pSpaceShip->getWidth(), m_pSpaceShip->getHeight());
+
+			//draw whiskers
+			Util::DrawLine(m_pSpaceShip->getTransform()->position, m_pSpaceShip->getLeftLOSEndPoint(), m_pSpaceShip->getLineColour(0));
+			Util::DrawLine(m_pSpaceShip->getTransform()->position, m_pSpaceShip->getMiddleLOSEndPoint(), m_pSpaceShip->getLineColour(1));
+			Util::DrawLine(m_pSpaceShip->getTransform()->position, m_pSpaceShip->getRightLOSEndPoint(), m_pSpaceShip->getLineColour(2));
 		}
 
 	}
@@ -164,6 +170,13 @@ void PlayScene::GUI_Function()
 	if (ImGui::SliderFloat("Turn Rate", &turn_rate, 0.0f, 20.0f))
 	{
 		m_pSpaceShip->setTurnRate(turn_rate);
+	}
+
+	//whisker properties
+	static float whisker_angle = m_pSpaceShip->getWhiskerAngle();
+	if (ImGui::SliderFloat("Whisker Angle", &whisker_angle, 10.0f, 60.0f))
+	{
+		m_pSpaceShip->updateWhiskers(whisker_angle);
 	}
 
 	if(ImGui::Button("Reset"))
