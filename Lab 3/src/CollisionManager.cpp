@@ -78,15 +78,12 @@ bool CollisionManager::AABBCheck(GameObject* object1, GameObject* object2)
 
 			switch (object2->getType())
 			{
-
 				case OBSTACLE:
 					SoundManager::Instance().playSound("thunder", 0);
 					break;
 				default:
-
 					break;
 			}
-
 			return true;
 		}
 		return false;
@@ -96,10 +93,8 @@ bool CollisionManager::AABBCheck(GameObject* object1, GameObject* object2)
 		object1->getRigidBody()->isColliding = false;
 		return false;
 	}
-
 	return false;
 }
-
 bool CollisionManager::lineLineCheck(const glm::vec2 line1_start, const glm::vec2 line1_end, const glm::vec2 line2_start, const glm::vec2 line2_end)
 {
 	const auto x1 = line1_start.x;
