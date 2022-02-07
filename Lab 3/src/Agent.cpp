@@ -10,11 +10,16 @@ Agent::Agent()
 	m_lineColour[0] = glm::vec4(0, 1, 0, 1); // left
 	m_lineColour[1] = glm::vec4(0, 1, 0, 1); // middle
 	m_lineColour[2] = glm::vec4(0, 1, 0, 1); //right
+	m_lineColour[3] = glm::vec4(0, 1, 0, 1); //far left
+	m_lineColour[4] = glm::vec4(0, 1, 0, 1); //far right
 
 	// initialize whisker collisions
 	m_collisionWhiskers[0] = false;
 	m_collisionWhiskers[1] = false;
 	m_collisionWhiskers[2] = false;
+	m_collisionWhiskers[3] = false;
+	m_collisionWhiskers[4] = false;
+
 
 	//initialize whisker angle
 	m_whiskerAngle = 45;
@@ -69,6 +74,16 @@ glm::vec2 Agent::getMiddleLOSEndPoint() const
 glm::vec2 Agent::getRightLOSEndPoint() const
 {
 	return m_rightLOSEndPoint;
+}
+
+glm::vec2 Agent::getfarLeftLOSEndPoint() const
+{
+	return m_farLeftLOSEndPoint;
+}
+
+glm::vec2 Agent::getfarRightLOSEndPoint() const
+{
+	return m_farRightLOSEndPoint;
 }
 
 bool* Agent::getCollisionWhiskers()
@@ -133,6 +148,16 @@ void Agent::setRightLOSEndPoint(const glm::vec2 point)
 	m_rightLOSEndPoint = point;
 }
 
+void Agent::setfarLeftLOSEndPoint(const glm::vec2 point)
+{
+	m_farLeftLOSEndPoint = point;
+}
+
+void Agent::setfarRightLOSEndPoint(const glm::vec2 point)
+{
+	m_farRightLOSEndPoint = point;
+}
+
 void Agent::setLineColour(const int index, const glm::vec4 colour)
 {
 	m_lineColour[index] = colour;
@@ -158,6 +183,16 @@ void Agent::updateWhiskers(const float angle)
 	x = sin((getCurrentHeading() + m_whiskerAngle + 90) * Util::Deg2Rad);
 	y = cos((getCurrentHeading() + m_whiskerAngle + 90) * Util::Deg2Rad);
 	setRightLOSEndPoint(getTransform()->position + glm::vec2(x, -y) * getLOSDistance() * 0.75f);
+
+	//far left whisker
+	x = sin((getCurrentHeading() - m_whiskerAngle + 45) * Util::Deg2Rad);
+	y = cos((getCurrentHeading() - m_whiskerAngle + 45) * Util::Deg2Rad);
+	setfarLeftLOSEndPoint(getTransform()->position + glm::vec2(x, -y) * getLOSDistance() * 0.75f);
+
+	//far right whisker
+	x = sin((getCurrentHeading() + m_whiskerAngle + 134.5) * Util::Deg2Rad);
+	y = cos((getCurrentHeading() + m_whiskerAngle + 134.5) * Util::Deg2Rad);
+	setfarRightLOSEndPoint(getTransform()->position + glm::vec2(x, -y) * getLOSDistance() * 0.75f);
 }
 
 void Agent::m_changeDirection()

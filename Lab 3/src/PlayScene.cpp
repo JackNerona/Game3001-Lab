@@ -37,6 +37,9 @@ void PlayScene::draw()
 			Util::DrawLine(m_pSpaceShip->getTransform()->position, m_pSpaceShip->getLeftLOSEndPoint(), m_pSpaceShip->getLineColour(0));
 			Util::DrawLine(m_pSpaceShip->getTransform()->position, m_pSpaceShip->getMiddleLOSEndPoint(), m_pSpaceShip->getLineColour(1));
 			Util::DrawLine(m_pSpaceShip->getTransform()->position, m_pSpaceShip->getRightLOSEndPoint(), m_pSpaceShip->getLineColour(2));
+			Util::DrawLine(m_pSpaceShip->getTransform()->position, m_pSpaceShip->getfarLeftLOSEndPoint(), m_pSpaceShip->getLineColour(3));
+			Util::DrawLine(m_pSpaceShip->getTransform()->position, m_pSpaceShip->getfarRightLOSEndPoint(), m_pSpaceShip->getLineColour(4));
+
 		}
 
 	}
@@ -66,6 +69,9 @@ void PlayScene::update()
 		m_pSpaceShip->getCollisionWhiskers()[0] = CollisionManager::lineRectCheck(m_pSpaceShip->getTransform()->position, m_pSpaceShip->getLeftLOSEndPoint(), boxStart, boxWidth, boxHeight);
 		m_pSpaceShip->getCollisionWhiskers()[1] = CollisionManager::lineRectCheck(m_pSpaceShip->getTransform()->position, m_pSpaceShip->getMiddleLOSEndPoint(), boxStart, boxWidth, boxHeight);
 		m_pSpaceShip->getCollisionWhiskers()[2] = CollisionManager::lineRectCheck(m_pSpaceShip->getTransform()->position, m_pSpaceShip->getRightLOSEndPoint(), boxStart, boxWidth, boxHeight);
+		m_pSpaceShip->getCollisionWhiskers()[3] = CollisionManager::lineRectCheck(m_pSpaceShip->getTransform()->position, m_pSpaceShip->getfarLeftLOSEndPoint(), boxStart, boxWidth, boxHeight);
+		m_pSpaceShip->getCollisionWhiskers()[4] = CollisionManager::lineRectCheck(m_pSpaceShip->getTransform()->position, m_pSpaceShip->getfarRightLOSEndPoint(), boxStart, boxWidth, boxHeight);
+
 
 		for (int i = 0; i < 5; ++i)
 		{
@@ -158,7 +164,7 @@ void PlayScene::GUI_Function()
 	// Obstacle Properties
 
 	static float obstacle[2] = { m_pObstacle->getTransform()->position.x, m_pObstacle->getTransform()->position.y };
-	if (ImGui::SliderFloat2("Obstacle Position", position, 0.0f, 800.0f))
+	if (ImGui::SliderFloat2("Obstacle Position", obstacle, 0.0f, 800.0f))
 	{
 		m_pObstacle->getTransform()->position = glm::vec2(obstacle[0], obstacle[1]);
 	}

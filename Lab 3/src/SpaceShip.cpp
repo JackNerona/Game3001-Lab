@@ -103,7 +103,7 @@ void SpaceShip::LookWhereYoureGoing(const glm::vec2 target_direction)
 {
 	float target_rotation = Util::signedAngle(getCurrentDirection(), target_direction) - 90;
 
-	const float turn_sensitivity = 3.0f;
+	const float turn_sensitivity = 50.0f;
 
 	if (getCollisionWhiskers()[0]) // if left whisker is colliding
 	{
