@@ -79,6 +79,7 @@ bool CollisionManager::AABBCheck(GameObject* object1, GameObject* object2)
 			switch (object2->getType())
 			{
 				case OBSTACLE:
+					SoundManager::Instance();
 					SoundManager::Instance().playSound("thunder", 0);
 					break;
 				default:

@@ -51,8 +51,27 @@ void PlayScene::update()
 	if(m_pSpaceShip->isEnabled())
 	{
 		CollisionManager::circleAABBCheck(m_pTarget, m_pSpaceShip);
-		CollisionManager::AABBCheck(m_pObstacle, m_pSpaceShip);
+		CollisionManager::AABBCheck(m_pSpaceShip, m_pObstacle);
 		CollisionManager::rotateAABB(m_pSpaceShip, m_pSpaceShip->getCurrentHeading());
+
+		// Obstacle dimension information / aliases
+		const auto boxWidth = m_pObstacle->getWidth();
+		const int halfBoxWidth = boxWidth * 0.5f;
+		const auto boxHeight = m_pObstacle->getHeight();
+		const int halfBoxHeight = boxHeight * 0.5f;
+		const auto boxStart = m_pObstacle->getTransform()->position - glm::vec2(halfBoxWidth, halfBoxHeight);
+
+
+		//check every whisker to see if it is colliding with the obstacle
+		m_pSpaceShip->getCollisionWhiskers()[0] = CollisionManager::lineRectCheck(m_pSpaceShip->getTransform()->position, m_pSpaceShip->getLeftLOSEndPoint(), boxStart, boxWidth, boxHeight);
+		m_pSpaceShip->getCollisionWhiskers()[1] = CollisionManager::lineRectCheck(m_pSpaceShip->getTransform()->position, m_pSpaceShip->getMiddleLOSEndPoint(), boxStart, boxWidth, boxHeight);
+		m_pSpaceShip->getCollisionWhiskers()[2] = CollisionManager::lineRectCheck(m_pSpaceShip->getTransform()->position, m_pSpaceShip->getRightLOSEndPoint(), boxStart, boxWidth, boxHeight);
+
+		for (int i = 0; i < 5; ++i)
+		{
+			m_pSpaceShip->setLineColour(i, 
+				(m_pSpaceShip->getCollisionWhiskers()[i]) ? glm::vec4(1, 0, 0, 1) : glm::vec4(0,1,0,1));
+		}
 	}
 }
 
@@ -138,10 +157,10 @@ void PlayScene::GUI_Function()
 
 	// Obstacle Properties
 
-	static float obstacle[2] = { m_pObstacle->getTransform()->position.x, m_pTarget->getTransform()->position.y };
+	static float obstacle[2] = { m_pObstacle->getTransform()->position.x, m_pObstacle->getTransform()->position.y };
 	if (ImGui::SliderFloat2("Obstacle Position", position, 0.0f, 800.0f))
 	{
-		m_pTarget->getTransform()->position = glm::vec2(obstacle[0], obstacle[1]);
+		m_pObstacle->getTransform()->position = glm::vec2(obstacle[0], obstacle[1]);
 	}
 
 	ImGui::Separator();

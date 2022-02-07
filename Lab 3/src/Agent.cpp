@@ -138,7 +138,7 @@ void Agent::setLineColour(const int index, const glm::vec4 colour)
 	m_lineColour[index] = colour;
 }
 
-void Agent::seWhiskerAngle(float angle)
+void Agent::seWhiskerAngle(const float angle)
 {
 	m_whiskerAngle = angle;
 }
@@ -155,9 +155,9 @@ void Agent::updateWhiskers(const float angle)
 	setLeftLOSEndPoint(getTransform()->position + glm::vec2(x, -y) * getLOSDistance() * 0.75f);
 
 	//right whisker
-	float i = sin((getCurrentHeading() + m_whiskerAngle + 90) * Util::Deg2Rad);
-	float n = cos((getCurrentHeading() + m_whiskerAngle + 90) * Util::Deg2Rad);
-	setRightLOSEndPoint(getTransform()->position + glm::vec2(i, -n) * getLOSDistance() * 0.75f);
+	x = sin((getCurrentHeading() + m_whiskerAngle + 90) * Util::Deg2Rad);
+	y = cos((getCurrentHeading() + m_whiskerAngle + 90) * Util::Deg2Rad);
+	setRightLOSEndPoint(getTransform()->position + glm::vec2(x, -y) * getLOSDistance() * 0.75f);
 }
 
 void Agent::m_changeDirection()
